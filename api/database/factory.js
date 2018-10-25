@@ -10,6 +10,8 @@
  */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
+const crypto = require('crypto');
+
 const Factory = use('Factory');
 const Config = use('Config');
 
@@ -18,6 +20,7 @@ Factory.blueprint('App/Models/User', async (faker) => {
         name: faker.username(),
         email: faker.email(),
         password: Config.get('app.defaultPassword'),
+        token: crypto.randomBytes(Config.get('app.tokenLength') / 2).toString('hex'),
     };
 });
 

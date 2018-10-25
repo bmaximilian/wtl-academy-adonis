@@ -9,6 +9,7 @@ class UserSchema extends Schema {
             table.string('name').notNullable().unique();
             table.string('email', 254).notNullable().unique();
             table.string('password').notNullable();
+            table.string('token').unique();
             table.timestamps();
         });
     }

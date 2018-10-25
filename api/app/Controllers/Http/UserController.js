@@ -4,6 +4,7 @@
 
 const { whitelist } = require('bmax-utils');
 const { unset } = require('lodash');
+const crypto = require('crypto');
 
 const Config = use('Config');
 const NotFoundExceptionResponse = use('App/Responses/NotFoundExceptionResponse');
@@ -24,6 +25,7 @@ class UserController {
             'id',
             'name',
             'email',
+            'token',
         ]);
     }
 
@@ -50,6 +52,8 @@ class UserController {
         if (!userData.password) {
             userData.password = Config.get('app.defaultPassword');
         }
+
+        userData.token = crypto.randomBytes(Config.get('app.tokenLength') / 2).toString('hex');
 
         const user = await UserModel.create(userData);
 
