@@ -1,4 +1,7 @@
-class StoreUser {
+
+const BlogValidator = use('App/Validators/BlogValidator');
+
+class StoreUser extends BlogValidator {
     get rules() {
         return {
             name: 'string|required|unique:users',
@@ -6,19 +9,11 @@ class StoreUser {
         };
     }
 
-    get validateAll() {
-        return true;
-    }
-
     get messages() {
         return {
             'email.unique': 'This email is already registered.',
             'name.unique': 'This name is already taken.',
         };
-    }
-
-    async fails(errorMessages) {
-        return this.ctx.response.send(errorMessages);
     }
 }
 

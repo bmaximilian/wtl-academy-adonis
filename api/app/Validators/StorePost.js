@@ -1,17 +1,11 @@
 
-class StorePost {
+const BlogValidator = use('App/Validators/BlogValidator');
+
+class StorePost extends BlogValidator {
     get rules() {
         return {
             message: 'string|required',
         };
-    }
-
-    get validateAll() {
-        return true;
-    }
-
-    async fails(errorMessages) {
-        return this.ctx.response.send(errorMessages);
     }
 }
 

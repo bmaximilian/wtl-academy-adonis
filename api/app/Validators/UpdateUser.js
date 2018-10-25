@@ -1,5 +1,7 @@
 
-class UpdateUser {
+const BlogValidator = use('App/Validators/BlogValidator');
+
+class UpdateUser extends BlogValidator {
     get rules() {
         const { id } = this.ctx.request.params;
 
@@ -9,19 +11,11 @@ class UpdateUser {
         };
     }
 
-    get validateAll() {
-        return true;
-    }
-
     get messages() {
         return {
             'email.unique': 'This email is already registered.',
             'name.unique': 'This name is already taken.',
         };
-    }
-
-    async fails(errorMessages) {
-        return this.ctx.response.send(errorMessages);
     }
 }
 

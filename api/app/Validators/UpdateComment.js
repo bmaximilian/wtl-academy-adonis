@@ -1,7 +1,7 @@
 
 const BlogValidator = use('App/Validators/BlogValidator');
 
-class UpdatePost extends BlogValidator {
+class UpdateComment extends BlogValidator {
     get rules() {
         return {
             message: 'string|required',
@@ -9,4 +9,4 @@ class UpdatePost extends BlogValidator {
     }
 }
 
-module.exports = UpdatePost;
+module.exports = UpdateComment;
