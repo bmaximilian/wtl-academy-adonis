@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+    blog-adonis-api:
+        image: registry.gitlab.com/bmaximilian/wtl-academy-adonis/blog-adonis-api:latest
+        command: adonis serve
+        depends_on:
+            - mariadb
+        environment:
+            - NODE_ENV=production
+        networks:
+            default:
+
+    api:
+        image: registry.gitlab.com/bmaximilian/wtl-academy-adonis/api:latest
+        links:
+            - blog-adonis-api
+        networks:
+            default:
+                aliases:
+                    - blog-api.test
+                    - api.test
+                    - api
+
+    mariadb:
+        image: registry.gitlab.com/bmaximilian/wtl-academy-adonis/mariadb:latest
+        volumes:
+            - mariadb-data:/var/lib/mysql
+        networks:
+            default:
+
+volumes:
+    mariadb-data:
+
+networks:
+    default:
