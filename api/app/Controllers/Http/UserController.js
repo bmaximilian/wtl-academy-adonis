@@ -3,6 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const { whitelist } = require('bmax-utils');
+const { unset } = require('lodash');
 
 const Config = use('Config');
 const NotFoundExceptionResponse = use('App/Responses/NotFoundExceptionResponse');
@@ -75,35 +76,42 @@ class UserController {
     }
 
     /**
-     * Render a form to update an existing user.
-     * GET users/:id/edit
-     *
-     * @param {object} ctx
-     * @param {Request} ctx.request
-     * @param {Response} ctx.response
-     * @param {View} ctx.view
-     */
-    async edit() {}
-
-    /**
      * Update user details.
      * PUT or PATCH users/:id
      *
      * @param {object} ctx
      * @param {Request} ctx.request
-     * @param {Response} ctx.response
+     * @param {Request} ctx.params
      */
-    async update() {}
+    async update({ params, request }) {
+        const user = await UserModel.find(params.id);
+        const userData = request.only(['name', 'email', 'password']);
+
+        if (!userData.password) {
+            unset(userData, 'password');
+        }
+
+        user.merge(userData);
+
+        await user.save();
+
+        return this.transform(user.toJSON());
+    }
 
     /**
      * Delete a user with id.
      * DELETE users/:id
      *
      * @param {object} ctx
-     * @param {Request} ctx.request
-     * @param {Response} ctx.response
+     * @param {Request} ctx.params
      */
-    async destroy() {}
+    async destroy({ params }) {
+        const user = await UserModel.find(params.id);
+
+        await user.delete();
+
+        return {};
+    }
 }
 
 module.exports = UserController;
