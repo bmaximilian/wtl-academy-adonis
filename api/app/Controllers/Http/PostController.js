@@ -35,6 +35,16 @@ class PostController {
             });
         }
 
+        if (post.creator) {
+            console.log(post.creator);
+
+            whitelistedPost.author = whitelist(post.creator, [
+                'id',
+                'name',
+                'email',
+            ]);
+        }
+
         return whitelistedPost;
     }
 
@@ -51,9 +61,12 @@ class PostController {
         const posts = await PostModel
         .query()
         .with('comments')
+        .with('creator')
         .fetch();
 
-        return posts.toJSON().map(post => this.transform(post));
+        return {
+            posts: posts.toJSON().map(post => this.transform(post)),
+        };
     }
 
     /**
@@ -71,6 +84,8 @@ class PostController {
         postData.user_id = user.id;
 
         const post = await PostModel.create(postData);
+        post.creator = user.toJSON();
+
         return this.transform(post.toJSON());
     }
 
@@ -88,6 +103,7 @@ class PostController {
         .query()
         .where('id', params.id)
         .with('comments')
+        .with('creator')
         .fetch();
 
         const post = posts.first();

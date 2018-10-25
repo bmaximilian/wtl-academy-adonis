@@ -20,28 +20,30 @@ Route.get('/', () => {
 });
 
 Route.group(() => {
-    Route.get('/users', 'UserController.index').middleware(['token']);
+    Route.get('/users', 'UserController.index');
     Route.post('/users', 'UserController.store').validator('StoreUser');
-    Route.get('/users/:id', 'UserController.show').middleware(['token']);
-    Route.put('/users/:id', 'UserController.update').middleware(['token']).validator('UpdateUser');
-    Route.delete('/users/:id', 'UserController.destroy').middleware(['token']);
+    Route.get('/users/:id', 'UserController.show');
+    Route.put('/users/:id', 'UserController.update').validator('UpdateUser');
+    Route.delete('/users/:id', 'UserController.destroy');
 
     Route
     .resource('posts', 'PostController')
     .apiOnly()
-    .middleware(['token'])
+    .middleware(new Map([
+        [['store', 'update', 'destroy'], ['token']],
+    ]))
     .validator(new Map([
         [['posts.store'], ['StorePost']],
         [['posts.update'], ['UpdatePost']],
     ]));
 
-    Route.get('/posts/:postId/comments', 'CommentController.indexByPost').middleware(['token']);
+    Route.get('/posts/:postId/comments', 'CommentController.indexByPost');
 
     Route.post('/posts/:postId/comments', 'CommentController.storeByPost')
     .middleware(['token'])
     .validator('StoreCommentByPostId');
 
-    Route.get('/posts/:postId/comments/:id', 'CommentController.show').middleware(['token']);
+    Route.get('/posts/:postId/comments/:id', 'CommentController.show');
     Route.put('/posts/:postId/comments/:id', 'CommentController.update').middleware(['token']);
     Route.delete('/posts/:postId/comments/:id', 'CommentController.destroy').middleware(['token']);
 

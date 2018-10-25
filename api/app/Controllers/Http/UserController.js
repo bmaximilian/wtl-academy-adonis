@@ -36,7 +36,9 @@ class UserController {
     async index() {
         const users = await UserModel.all();
 
-        return users.toJSON().map(user => this.transform(user));
+        return {
+            users: users.toJSON().map(user => this.transform(user)),
+        };
     }
 
     /**

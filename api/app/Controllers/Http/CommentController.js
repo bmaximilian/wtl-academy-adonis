@@ -8,7 +8,6 @@ const { unset } = require('lodash');
 
 const NotFoundExceptionResponse = use('App/Responses/NotFoundExceptionResponse');
 const CommentModel = use('App/Models/Comment');
-const PostModel = use('App/Models/Post');
 
 /**
  * Resourceful controller for interacting with comments
@@ -21,10 +20,20 @@ class CommentController {
      * @return {object}
      */
     transform(comment) {
-        return whitelist(comment, [
+        const whitelistedComment = whitelist(comment, [
             'id',
             'message',
         ]);
+
+        if (comment.creator) {
+            whitelistedComment.author = whitelist(comment.creator, [
+                'id',
+                'name',
+                'email',
+            ]);
+        }
+
+        return whitelistedComment;
     }
 
     /**
@@ -37,9 +46,14 @@ class CommentController {
      * @param {View} ctx.view
      */
     async index() {
-        const comments = await CommentModel.all();
+        const comments = await CommentModel
+        .query()
+        .with('creator')
+        .fetch();
 
-        return comments.toJSON().map(comment => this.transform(comment));
+        return {
+            comments: comments.toJSON().map(comment => this.transform(comment)),
+        };
     }
 
     /**
@@ -52,15 +66,15 @@ class CommentController {
      * @param {View} ctx.view
      */
     async indexByPost({ params }) {
-        const posts = await PostModel
+        const comments = await CommentModel
         .query()
-        .where('id', params.postId)
-        .with('comments')
+        .where('post_id', params.postId)
+        .with('creator')
         .fetch();
 
-        const post = posts.first();
-
-        return post.toJSON().comments.map(comment => this.transform(comment));
+        return {
+            comments: comments.toJSON().map(comment => this.transform(comment)),
+        };
     }
 
     /**
@@ -80,6 +94,8 @@ class CommentController {
         unset(commentData, 'postId');
 
         const comment = await CommentModel.create(commentData);
+        comment.creator = user.toJSON();
+
         return this.transform(comment.toJSON());
     }
 
@@ -100,6 +116,8 @@ class CommentController {
         unset(commentData, 'postId');
 
         const comment = await CommentModel.create(commentData);
+        comment.creator = user.toJSON();
+
         return this.transform(comment.toJSON());
     }
 
@@ -111,9 +129,15 @@ class CommentController {
    * @param {Response} ctx.response
    */
     async show({ params, response }) {
-        const comment = await CommentModel.find(params.id);
+        const comments = await CommentModel
+        .query()
+        .where('id', params.id)
+        .with('creator')
+        .fetch();
 
-        if (!comment || params.postId !== comment.post_id) {
+        const comment = comments.first();
+
+        if (!comment) {
             const e = new NotFoundExceptionResponse('comment_not_found');
             return e.send(response);
         }
@@ -133,7 +157,7 @@ class CommentController {
         const comment = await CommentModel.find(params.id);
         const commentData = request.only(['message']);
 
-        if (!comment || params.postId !== comment.post_id) {
+        if (!comment) {
             const e = new NotFoundExceptionResponse('comment_not_found');
             return e.send(response);
         }
@@ -156,7 +180,7 @@ class CommentController {
     async destroy({ params, response }) {
         const comment = await CommentModel.find(params.id);
 
-        if (!comment || params.postId !== comment.post_id) {
+        if (!comment) {
             const e = new NotFoundExceptionResponse('comment_not_found');
             return e.send(response);
         }
