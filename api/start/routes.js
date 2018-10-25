@@ -35,6 +35,16 @@ Route.group(() => {
         [['posts.update'], ['UpdatePost']],
     ]));
 
+    Route.get('/posts/:postId/comments', 'CommentController.indexByPost').middleware(['token']);
+
+    Route.post('/posts/:postId/comments', 'CommentController.storeByPost')
+    .middleware(['token'])
+    .validator('StoreCommentByPostId');
+
+    Route.get('/posts/:postId/comments/:id', 'CommentController.show').middleware(['token']);
+    Route.put('/posts/:postId/comments/:id', 'CommentController.update').middleware(['token']);
+    Route.delete('/posts/:postId/comments/:id', 'CommentController.destroy').middleware(['token']);
+
     Route
     .resource('comments', 'CommentsController')
     .apiOnly()
