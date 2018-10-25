@@ -36,8 +36,6 @@ class PostController {
         }
 
         if (post.creator) {
-            console.log(post.creator);
-
             whitelistedPost.author = whitelist(post.creator, [
                 'id',
                 'name',
