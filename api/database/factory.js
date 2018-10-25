@@ -12,13 +12,12 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory');
 const Config = use('Config');
-const Hash = use('Hash');
 
 Factory.blueprint('App/Models/User', async (faker) => {
     return {
         name: faker.username(),
         email: faker.email(),
-        password: await Hash.make(Config.get('app.defaultPassword')),
+        password: Config.get('app.defaultPassword'),
     };
 });
 

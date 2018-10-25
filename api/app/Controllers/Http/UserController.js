@@ -2,6 +2,10 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const { whitelist } = require('bmax-utils');
+
+const Config = use('Config');
+const NotFoundExceptionResponse = use('App/Responses/NotFoundExceptionResponse');
 const UserModel = use('App/Models/User');
 
 /**
@@ -9,16 +13,27 @@ const UserModel = use('App/Models/User');
  */
 class UserController {
     /**
+     * Transforms the user for the response
+     *
+     * @param user
+     * @return {object}
+     */
+    transform(user) {
+        return whitelist(user, [
+            'id',
+            'name',
+            'email',
+        ]);
+    }
+
+    /**
      * Show a list of all users.
      * GET users
-     *
-     * @param {object} ctx
-     * @param {Request} ctx.request
-     * @param {Response} ctx.response
-     * @param {View} ctx.view
      */
     async index() {
-        return UserModel.all();
+        const users = await UserModel.all();
+
+        return users.toJSON().map(user => this.transform(user));
     }
 
     /**
@@ -27,20 +42,37 @@ class UserController {
      *
      * @param {object} ctx
      * @param {Request} ctx.request
-     * @param {Response} ctx.response
      */
-    async store() {}
+    async store({ request }) {
+        const userData = request.only(['name', 'email', 'password']);
+
+        if (!userData.password) {
+            userData.password = Config.get('app.defaultPassword');
+        }
+
+        const user = await UserModel.create(userData);
+
+        return this.transform(user.toJSON());
+    }
 
     /**
      * Display a single user.
      * GET users/:id
      *
      * @param {object} ctx
-     * @param {Request} ctx.request
+     * @param {Request} ctx.params
      * @param {Response} ctx.response
-     * @param {View} ctx.view
      */
-    async show() {}
+    async show({ params, response }) {
+        const user = await UserModel.find(params.id);
+
+        if (!user) {
+            const e = new NotFoundExceptionResponse('user_not_found');
+            return e.send(response);
+        }
+
+        return this.transform(user.toJSON());
+    }
 
     /**
      * Render a form to update an existing user.
