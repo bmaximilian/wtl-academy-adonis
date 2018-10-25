@@ -1,42 +1,47 @@
 {
-  "name": "adonis-api-app",
-  "version": "4.1.0",
-  "adonis-version": "4.1.0",
-  "description": "Adonisjs boilerplate for API server with pre-configured JWT",
-  "main": "index.js",
-  "scripts": {
-    "start": "node server.js",
-    "test": "node ace test"
-  },
-  "keywords": [
-    "adonisjs",
-    "adonis-app"
-  ],
-  "author": "",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@adonisjs/ace": "^5.0.8",
-    "@adonisjs/auth": "^3.0.7",
-    "@adonisjs/bodyparser": "^2.0.5",
-    "@adonisjs/cors": "^1.0.7",
-    "@adonisjs/fold": "^4.0.9",
-    "@adonisjs/framework": "^5.0.9",
-    "@adonisjs/ignitor": "^2.0.8",
-    "@adonisjs/lucid": "^6.1.3",
-    "@types/lodash": "^4.14.117",
-    "bmax-utils": "^0.1.6",
-    "lodash": "^4.17.11",
-    "mysql": "^2.16.0"
-  },
-  "devDependencies": {
-    "adonisjs-types": "^1.3.4",
-    "eslint": "^5.7.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-friendly-formatter": "^4.0.1",
-    "eslint-plugin-import": "^2.14.0"
-  },
-  "autoload": {
-    "App": "./app"
-  }
+    "name": "adonis-api-app",
+    "version": "4.1.0",
+    "adonis-version": "4.1.0",
+    "description": "Adonisjs boilerplate for API server with pre-configured JWT",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server.js",
+        "serve:dev": "NODE_ENV=development adonis serve --dev",
+        "serve": "npm run setup && NODE_ENV=production adonis serve",
+        "setup": "sh setup/00-setup.sh",
+        "test": "node ace test",
+        "lint": "./node_modules/.bin/eslint --format './node_modules/eslint-friendly-formatter/index.js' .",
+        "ci": "NODE_ENV=production npm run lint && CI=true npm test"
+    },
+    "keywords": [
+        "adonisjs",
+        "adonis-app"
+    ],
+    "author": "",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@adonisjs/ace": "^5.0.8",
+        "@adonisjs/auth": "^3.0.7",
+        "@adonisjs/bodyparser": "^2.0.5",
+        "@adonisjs/cors": "^1.0.7",
+        "@adonisjs/fold": "^4.0.9",
+        "@adonisjs/framework": "^5.0.9",
+        "@adonisjs/ignitor": "^2.0.8",
+        "@adonisjs/lucid": "^6.1.3",
+        "@types/lodash": "^4.14.117",
+        "bmax-utils": "^0.1.6",
+        "lodash": "^4.17.11",
+        "mysql": "^2.16.0"
+    },
+    "devDependencies": {
+        "adonisjs-types": "^1.3.4",
+        "eslint": "^5.7.0",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-friendly-formatter": "^4.0.1",
+        "eslint-plugin-import": "^2.14.0"
+    },
+    "autoload": {
+        "App": "./app"
+    }
 }

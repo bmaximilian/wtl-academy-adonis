@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")"
+cd ../..
+# path is now project root
+
+docker-compose run blog-adonis-api npm run ci

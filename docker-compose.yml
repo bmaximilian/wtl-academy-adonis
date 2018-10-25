@@ -3,7 +3,7 @@ version: '3.1'
 services:
     blog-adonis-api:
         image: registry.gitlab.com/bmaximilian/wtl-academy-adonis/blog-adonis-api:latest
-        command: adonis serve
+        command: npm run serve
         depends_on:
             - mariadb
         environment:
