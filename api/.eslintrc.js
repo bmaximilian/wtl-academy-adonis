@@ -36,6 +36,7 @@ module.exports = {
         'no-multiple-empty-lines': ['error', { 'max': 1, 'maxBOF': 1 }],
         // 'valid-jsdoc': 'error',
         'arrow-body-style': 'off',
+        'no-empty-function': 'off',
         'max-len': ['error', { 'code': 120 }],
         /* 'require-jsdoc': ['error', {
             require: {
