@@ -38,7 +38,7 @@ class ResolveUserFromToken {
 
         ctx.user = user;
 
-        await next();
+        return next();
     }
 }
 
