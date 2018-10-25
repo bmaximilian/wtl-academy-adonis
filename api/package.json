@@ -6,7 +6,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node server.js",
-        "serve:dev": "NODE_ENV=development adonis serve --dev",
+        "serve:dev": "npm run setup && NODE_ENV=development adonis serve --dev",
         "serve": "npm run setup && NODE_ENV=production adonis serve",
         "setup": "sh setup/00-setup.sh",
         "test": "node ace test",

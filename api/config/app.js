@@ -28,6 +28,16 @@ module.exports = {
   */
     appKey: Env.getOrFail('APP_KEY'),
 
+    /*
+     |--------------------------------------------------------------------------
+     | App Default Password
+     |--------------------------------------------------------------------------
+     |
+     | The default password of a new user
+     |
+     */
+    defaultPassword: Env.get('DEFAULT_PASSWORD'),
+
     http: {
     /*
     |--------------------------------------------------------------------------

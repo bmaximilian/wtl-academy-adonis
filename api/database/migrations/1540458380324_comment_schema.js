@@ -11,7 +11,7 @@ class CommentSchema extends Schema {
             table.integer('post_id').unsigned().notNullable()
             .references('id')
             .inTable('posts');
-            table.integer('creator_id').unsigned().notNullable()
+            table.integer('user_id').unsigned().notNullable()
             .references('id')
             .inTable('users');
 
